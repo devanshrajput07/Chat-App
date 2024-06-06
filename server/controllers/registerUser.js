@@ -5,7 +5,7 @@ const UserModel = require("../models/UserModel");
 
 const registerUser = async (req, res) => {
   try {
-    const { username, email, password, profile_pic } = req.body;
+    const { name, email, password, profile_pic } = req.body;
 
     // Check if the user already exists
     const user = await UserModel.findOne({ email });
@@ -21,7 +21,7 @@ const registerUser = async (req, res) => {
 
     // Create a New User
     const newUser = new UserModel({
-      username,
+      name,
       email,
       password: hashedPassword,
       profile_pic,
@@ -29,13 +29,11 @@ const registerUser = async (req, res) => {
 
     // Save the User to the database
     await newUser.save();
-    return res
-      .status(201)
-      .json({
-        message: "User created successfully",
-        data: newUser,
-        success: true,
-      });
+    return res.status(201).json({
+      message: "User created successfully",
+      data: newUser,
+      success: true,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message || error, error: true });

@@ -1,10 +1,10 @@
 const UserModel = require("../models/UserModel");
 const bcrypt = require("bcryptjs");
-const JWT = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 const checkPassword = async (req, res) => {
   try {
-    const { email, userId } = req.body;
+    const { password, userId } = req.body;
 
     const user = await UserModel.findById(userId);
 
@@ -21,12 +21,11 @@ const checkPassword = async (req, res) => {
     }
 
     const payload = {
-      user: {
-        id: user._id,
-      },
+      id: user._id,
+      email: user.email,
     };
 
-    const token = JWT.sign(payload, process.env.JWT_SECRET, {
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
 
@@ -39,7 +38,6 @@ const checkPassword = async (req, res) => {
       .cookie("token", token, cookieOptions)
       .status(200)
       .json({ message: "Login Successfully", data: user, success: true });
-      
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message || error, error: true });

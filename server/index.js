@@ -4,6 +4,7 @@ require("dotenv").config();
 const connectDB = require("./config/connectDB");
 const DATABASE_URL = process.env.DATABASE_URL;
 const router = require("./routes/index");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 app.use(
@@ -16,6 +17,7 @@ app.use(
 const PORT = process.env.PORT;
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api", router);
 
